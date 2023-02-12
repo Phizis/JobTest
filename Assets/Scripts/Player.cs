@@ -9,8 +9,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        var p = PlayerPosition.transform.position;
-        PlayerPosition.transform.position = CheckPositionX(p);
+        var p = transform.position;
+        transform.position = CheckPositionX(p);
     }
 
     /// <summary>

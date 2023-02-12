@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+
+enum Controls
+{
+    Arrows,
+    Tap,
+    Swipe
+}
 
 public class MovingControls : MonoBehaviour
 {
+    [Header("Player stats")] 
     [SerializeField] float lerpDuration;
     private float elapsedLerpTime;
 
@@ -11,16 +20,19 @@ public class MovingControls : MonoBehaviour
     private Vector3 endPosition;
     [SerializeField] float playerStep;
 
+    [Header("Borders")]
     [SerializeField] float borderLeft;
     [SerializeField] float borderRight;
 
-    private string controlsKey = "Arrows";
+    [Header("Touch processing")]
+    [SerializeField] Canvas canvas;
 
-    //we can use GameObject Player if necessary instead transform position
+    private string controlsKey = "Swipe";    
+
     void Start()
     {
         startPosition = transform.position;
-        endPosition = transform.position;
+        endPosition = transform.position;        
     }
 
     void Update()
@@ -67,17 +79,19 @@ public class MovingControls : MonoBehaviour
 
     void TapMoving()
     {
-        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        if (Input.touchCount > 0)
         {
-            endPosition.x -= playerStep * Time.deltaTime;
-            endPosition.x = CheckXPosition(endPosition.x);
-        }
-
-        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
-        {
-            endPosition.x += playerStep * Time.deltaTime;
-            endPosition.x = CheckXPosition(endPosition.x);
-        }
+            if (Input.GetTouch(0).position.x > canvas.pixelRect.width / 2)
+            {
+                endPosition.x += playerStep * Time.deltaTime;
+                endPosition.x = CheckXPosition(endPosition.x);
+            }
+            else
+            {
+                endPosition.x -= playerStep * Time.deltaTime;
+                endPosition.x = CheckXPosition(endPosition.x);
+            }
+        }        
     }
 
     void SwipeMoving()
